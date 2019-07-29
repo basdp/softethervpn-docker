@@ -69,11 +69,11 @@ spec:
   - name: management
     protocol: TCP
     port: 5555
-    nodePort: 35555
+    nodePort: 30555
   - name: ipsec-nat
     protocol: UDP
     port: 4500
-    nodePort: 34500
+    nodePort: 30450
   - name: ipsec-ike
     protocol: UDP
     port: 500
