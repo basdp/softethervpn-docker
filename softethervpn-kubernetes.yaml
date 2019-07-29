@@ -1,34 +1,18 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: softethervpn-pv-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
-
----
-
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: softethervpn
 spec:
   selector:
     matchLabels:
       app: softethervpn
+  serviceName: "softethervpn"
   replicas: 1
   template:
     metadata:
       labels:
         app: softethervpn
     spec:
-      volumes:
-      - name: softethervpn-pv-storage
-        persistentVolumeClaim:
-          claimName: softethervpn-pv-claim
       containers:
       - name: softethervpn
         image: basdp/softethervpn-docker:latest
@@ -53,7 +37,16 @@ spec:
           protocol: UDP
         volumeMounts:
         - mountPath: "/etc/vpnserver"
-          name: softethervpn-pv-storage
+          name: softethervpn-pv
+  volumeClaimTemplates:
+  - metadata:
+      name: softethervpn-pv
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
 
 ---
 
